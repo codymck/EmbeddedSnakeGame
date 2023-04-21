@@ -73,7 +73,6 @@ int main(){
     max7219.enable_device(1);
     thread_sleep_for(1000);
     max7219.display_all_off();
-    //max7219.display_all_on();
 
     // show mommy najjar this
     deathScreen();
@@ -118,36 +117,4 @@ int main(){
         }
         count++;
     }
-
-
-    
-    // while(true){
-    //     for(int i = 1; i < 9; i+=2){
-    //         max7219.write_digit(1, i, 0b10101010);
-    //     }
-    //     for(int i = 2; i < 9; i+=2){
-    //         max7219.write_digit(1, i, 0b01010101);
-    //     }
-    //     thread_sleep_for(1000);
-    //     for(int i = 1; i < 9; i+=2){
-    //         max7219.write_digit(1, i, 0b01010101);
-    //     }
-    //     for(int i = 2; i < 9; i+=2){
-    //         max7219.write_digit(1, i, 0b10101010);
-    //     }
-    //     thread_sleep_for(1000);
-    // }
-
-
-
-    // uint8_t idx, idy;
-    
-    // //writes every digit of every device to 0
-    // for(idx = 0; idx < 1; idx++){
-    //     for(idy = 0; idy < Max7219::MAX7219_DIGIT_7; idy++){
-    //         max7219.write_digit((idx + 1), (idy + 1), 0xFF);
-    //         thread_sleep_for(1000);
-    //     }
-    // }
-
 }
