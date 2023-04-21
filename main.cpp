@@ -1,15 +1,17 @@
 #include "mbed.h"
 #include "max7219.h"
 #include "Game.h"
+#include <vector>
 
 Max7219 max7219(D11, D12, D13, D10);
+
+Game g;
 
 int conversion(int array[], int len) {
     int output = 0;
     int power = 1;
 
-    for (int i = 0; i < len; i++)
-    {
+    for (int i = 0; i < len; i++){
         output += array[(len - 1) - i] * power;
         // output goes 1*2^0 + 0*2^1 + 0*2^2 + ...
         power *= 2;
@@ -17,6 +19,46 @@ int conversion(int array[], int len) {
     }
     printf("\n");
     return output;
+}
+
+void updateScreen(){
+    for(int i = 1; i < 9; i++){
+        unsigned char row = 0;
+        for(int j = 0; j < 8; j++){
+            int argh = conversion(g.board[i-1], 8);
+            max7219.write_digit(1, i, argh);
+        }
+    }
+}
+
+void deathScreen(){
+    srand(time(NULL));
+    vector<int> columns = {0, 0, 0, 0, 0, 0, 0, 0};
+    int count = 0;
+    while(true){
+        for(int i = 0; i < 8; i++){
+            if((rand() % 3) + 1 > 1){
+                if(columns.at(i) < 8){
+                    g.board[columns.at(i)][i] = 1;
+                    columns.at(i)++;
+                    count++;
+                }
+            }
+            
+        }
+        updateScreen();
+        if(count >= 64){
+            break;
+        }
+    }
+}
+
+void startAnimation(){
+    for(int i = 1; i < 9; i++){
+        max7219.write_digit(1, i, 0b00000000);
+        thread_sleep_for(200);
+    }
+    g.resetBoard();
 }
 
 int main(){
@@ -31,15 +73,13 @@ int main(){
     max7219.enable_device(1);
     thread_sleep_for(1000);
     max7219.display_all_off();
+    //max7219.display_all_on();
 
-    Game g;
-    for(int i = 1; i < 9; i++){
-        unsigned char row = 0;
-        for(int j = 0; j < 8; j++){
-            int argh = conversion(g.board[i-1], 8);
-            max7219.write_digit(1, i, argh);
-        }
-    }
+    // show mommy najjar this
+    deathScreen();
+    thread_sleep_for(1000);
+    startAnimation();
+
     thread_sleep_for(1000);
     int count = 0;
 
