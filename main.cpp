@@ -4,12 +4,12 @@
 #include "mbed.h"
 #include <vector>
 
-Max7219 max7219(D11, D12, D13, D10);
-Joystick j(A1, A0, PA_10);
+Max7219 max7219(D11, D12, D13, D10); // declare pins for 8x8 LED display
+Joystick j(A1, A0, PA_10); // declare pins for joystick
 
-Game g;
+Game g; // declare game board
 
-int conversion(int array[], int len) {
+int conversion(int array[], int len) { // convert array of binary numbers to a decimal number
   int output = 0;
   int power = 1;
 
@@ -23,7 +23,7 @@ int conversion(int array[], int len) {
   return output;
 }
 
-void updateScreen() {
+void updateScreen() { // 
   for (int i = 1; i < 9; i++) {
     unsigned char row = 0;
     for (int j = 0; j < 8; j++) {

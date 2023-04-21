@@ -67,7 +67,7 @@ private:
   AnalogIn *vert;
   AnalogIn *horiz;
   InterruptIn *click;
-  int _click_flag;  // flag set in ISR
+  volatile int _click_flag;  // flag set in ISR
   void click_isr(); // ISR on button press
   // centred x,y values
   float _x0;
