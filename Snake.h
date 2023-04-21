@@ -1,6 +1,6 @@
 #ifndef Snake_H
 #define Snake_H
-
+#include "Joystick.h"
 struct Node {
     int x;
     int y; 
@@ -15,10 +15,10 @@ public:
     Node *head;
     Node *tail;
 
-    char direction; // char to represent direction 'u', 'd', 'l', 'r' { up, down, left, right }
+    Direction direction; // char to represent direction 'u', 'd', 'l', 'r' { up, down, left, right }
 
     void grow();
-    void move(char d);
+    void move(Direction d);
 
 };
 

@@ -5,7 +5,7 @@ Snake::Snake() {
     head = new Node();
     tail = new Node();
 
-    direction = 'r';
+    direction = r;
 
     head->x = 1;
     head->y = 0;
@@ -27,32 +27,34 @@ void Snake::grow() {
     forward->x = head->x;
     forward->y = head->y;
 
-    if (direction == 'r') {
+    if (direction == r) {
         forward->x++;
         head = forward;
     }
-    else if (direction == 'd') {
+    else if (direction == d) {
         forward->y++;
         head = forward;
     }
-    else if (direction == 'l') {
+    else if (direction == l) {
         forward->x--;
         head = forward;
     }
-    else if (direction == 'u') {
+    else if (direction == u) {
         forward->y--;
         head = forward;
     }
 }
 
-void Snake::move(char dir) {
+void Snake::move(Direction dir) {
     Node *forward = new Node();
-    direction = dir;
+    if(dir != CENTRE){
+        direction = dir;
+    }
     forward->next = head;
     forward->x = head->x;
     forward->y = head->y;
 
-    if (direction == 'r') {
+    if (direction == r) {
         forward->x++;
         head = forward;
         
@@ -60,7 +62,7 @@ void Snake::move(char dir) {
             forward = forward->next;
         }
     }
-    else if (direction == 'd') {
+    else if (direction == d) {
         forward->y++;
         head = forward;
         
@@ -68,7 +70,7 @@ void Snake::move(char dir) {
             forward = forward->next;
         }
     }
-    else if (direction == 'l') {
+    else if (direction == l) {
         forward->x--;
         head = forward;
         
@@ -76,7 +78,7 @@ void Snake::move(char dir) {
             forward = forward->next;
         }
     }
-    else if (direction == 'u') {
+    else if (direction == u) {
         forward->y--;
         head = forward;
         
@@ -88,4 +90,5 @@ void Snake::move(char dir) {
     delete tail;
     tail = forward;
     tail->next = nullptr;
+
 }
