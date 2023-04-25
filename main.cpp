@@ -5,11 +5,13 @@
 #include <vector>
 
 Max7219 max7219(D11, D12, D13, D10); // declare pins for 8x8 LED display
-Joystick j(A1, A0, PA_10); // declare pins for joystick
+Joystick j(A1, A0, D2);              // declare pins for joystick
 
 Game g; // declare game board
+Direction dir;
 
-int conversion(int array[], int len) { // convert array of binary numbers to a decimal number
+int conversion(int array[],
+               int len) { // convert array of binary numbers to a decimal number
   int output = 0;
   int power = 1;
 
@@ -23,7 +25,7 @@ int conversion(int array[], int len) { // convert array of binary numbers to a d
   return output;
 }
 
-void updateScreen() { // 
+void updateScreen() { //
   for (int i = 1; i < 9; i++) {
     unsigned char row = 0;
     for (int j = 0; j < 8; j++) {
@@ -74,82 +76,52 @@ int main() {
   max7219.init_device(cfg);
   max7219.enable_device(1);
   thread_sleep_for(1000);
-  max7219.display_all_off();
+  max7219.display_all_on();
 
-   deathScreen();
+  // deathScreen();
   // thread_sleep_for(1000);
   // startAnimation();
 
   thread_sleep_for(1000);
-  int count = 0;
+
   while (1) {
-    if (j.button_pressed()) {
-        startAnimation();
-        g.gameOver = false;
+    Game s;
+    g = s;
+    while (!j.button_pressed()){ };
+    startAnimation();
+    g.gameOver = false;
+    g.s->grow();
+    g.s->grow();
+
+    dir = r;
     //   max7219.display_all_off();
-      while (g.gameOver == false) {
-        Direction d = j.get_direction();
-        // printf("direction = %i\n", d);
-        g.update();
-        if (g.gameOver == true) {
-          printf("game ova");
-          break;
+    while (g.gameOver == false) {
+      // printf("direction = %i\n", d);
+      int sleep = 0;
+      while (sleep < 300) {
+        if (j.get_direction() != CENTRE) {
+          dir = j.get_direction();
         }
-        g.s->move(d);
-        for (int i = 1; i < 9; i++) {
-          unsigned char row = 0;
-          // for(int j = 0; j < 8; j++){
-          //     row = (row << 1) | g.board[i-1][j];
-          // }
-          int argh = conversion(g.board[i - 1], 8);
-          max7219.write_digit(1, i, argh);
-        }
-        count++;
+        thread_sleep_for(1);
+        sleep++;
+      }
+      g.update();
 
-        if (count % 10 == 0) {
-          // g.s->grow();
-        }
-        thread_sleep_for(200);
-     }
+      g.s->move(dir);
 
-      thread_sleep_for(500);
-      deathScreen();
-      g.gameOver = false;
+      for (int i = 1; i < 9; i++) {
+        unsigned char row = 0;
+        // for(int j = 0; j < 8; j++){
+        //     row = (row << 1) | g.board[i-1][j];
+        // }
+        int argh = conversion(g.board[i - 1], 8);
+        max7219.write_digit(1, i, argh);
+      }
     }
+    printf("game ova\n");
+    // random button pressed to "reset" it
+    j.button_pressed();
+    thread_sleep_for(500);
+    deathScreen();
   }
-  // /*while (count < 25) {
-  //     g.update();
-  //     if (count < 5) {
-  //         g.s->move('r');
-  //         if(count == 4){
-  //             g.s->grow();
-  //         }
-  //     }
-  //     else if (count < 12) {
-  //         g.s->move('d');
-  //     }
-  //     else if (count < 19){
-  //         g.s->move('l');
-  //     }
-  //     else {
-  //         g.s->move('u');
-  //         if(count == 19){
-  //             g.s->grow();
-  //         }
-  //         else if (count == 21) {
-  //             g.s->grow();
-  //         }
-  //     }*/
-  //     for(int i = 1; i < 9; i++){
-  //         printf("LOOP \n");
-  //         unsigned char row = 0;
-  //         // for(int j = 0; j < 8; j++){
-  //         //     row = (row << 1) | g.board[i-1][j];
-  //         // }
-  //         int argh = conversion(g.board[i-1], 8);
-  //         printf("%d\n", argh);
-  //         max7219.write_digit(1, i, argh);
-  //     }
-  //     count++;
-  // }
 }

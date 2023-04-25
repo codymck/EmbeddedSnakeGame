@@ -19,7 +19,7 @@ void Joystick::init() {
   // is connected to +3V3 so we read 1 when pressed and 0 when not pressed
   click->mode(PullUp);
   // we therefore need to fire the interrupt on a rising edge
-  click->fall(callback(this, &Joystick::click_isr));
+  click->rise(callback(this, &Joystick::click_isr));
   // need to use a callback since mbed-os5 - basically tells it to look in this
   // class for the ISR
   _click_flag = 0;
@@ -131,7 +131,7 @@ Polar Joystick::get_polar() {
 
 bool Joystick::button_pressed() {
   // ISR must have been triggered
-  if (_click_flag) {
+  if (_click_flag == 1) {
     _click_flag = 0; // clear flag
     return true;
   } else {

@@ -45,9 +45,18 @@ void Snake::grow() {
     }
 }
 
+bool opposite(Direction d1, Direction d2){
+    if((d1 == u && d2 == d) || (d1 == d && d2 == u)){
+        return true;
+    }else if((d1 == l && d2 == r) || (d1 == r && d2 == l)){
+        return true;
+    }
+    return false;
+}
+
 void Snake::move(Direction dir) {
     Node *forward = new Node();
-    if(dir != CENTRE){
+    if(dir != CENTRE && !opposite(direction, dir)){
         direction = dir;
     }
     forward->next = head;

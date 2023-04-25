@@ -1,7 +1,7 @@
 #include "Game.h"
 #include <iostream>
 Game::Game() {
-    gameOver = false;
+    gameOver = true;
     // board[row][column]     board[y][x]
     int board[8][8] = {
         {0, 0, 0, 0, 0, 0, 0, 0},
@@ -27,7 +27,6 @@ void Game::update() {
     Node *n = s->head;
 
     if(n->x < 0 || n->x > 7 || n->y < 0 || n->y > 7){
-        printf("game OVER");
         gameOver = true;
         return;
     }
