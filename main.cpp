@@ -90,8 +90,6 @@ int main() {
     while (!j.button_pressed()){ };
     startAnimation();
     g.gameOver = false;
-    g.s->grow();
-    g.s->grow();
 
     dir = r;
     //   max7219.display_all_off();
@@ -106,7 +104,6 @@ int main() {
         sleep++;
       }
       g.update();
-
       g.s->move(dir);
 
       for (int i = 1; i < 9; i++) {

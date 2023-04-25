@@ -5,6 +5,11 @@ Snake::Snake() {
     head = new Node();
     tail = new Node();
 
+    fruit = new Fruit();
+    //fruit->x = 5;
+    //fruit->y = 5;
+
+
     direction = r;
 
     head->x = 1;
@@ -21,29 +26,24 @@ Snake::~Snake() {
 
 }
 
-void Snake::grow() {
-    Node *forward = new Node();
-    forward->next = head;
-    forward->x = head->x;
-    forward->y = head->y;
+// void Snake::grow() {
+//     Node *forward = new Node();
+//     forward->next = head;
+//     forward->x = head->x;
+//     forward->y = head->y;
 
-    if (direction == r) {
-        forward->x++;
-        head = forward;
-    }
-    else if (direction == d) {
-        forward->y++;
-        head = forward;
-    }
-    else if (direction == l) {
-        forward->x--;
-        head = forward;
-    }
-    else if (direction == u) {
-        forward->y--;
-        head = forward;
-    }
-}
+//     if (direction == r) {
+//         forward->x++;
+//     }else if (direction == d) {
+//         forward->y++;
+//     }else if (direction == l) {
+//         forward->x--;
+//     }else if (direction == u) {
+//         forward->y--;
+//     }
+
+//     head = forward;
+// }
 
 bool opposite(Direction d1, Direction d2){
     if((d1 == u && d2 == d) || (d1 == d && d2 == u)){
@@ -52,6 +52,25 @@ bool opposite(Direction d1, Direction d2){
         return true;
     }
     return false;
+}
+
+void Snake::respawnFruit(){
+    srand(time(NULL));
+    Node *n = head;
+    int randomX = rand() % 8;
+    int randomY = rand() % 8;
+    while (n != tail) {
+        if(n->x == randomX && n->y == randomY){
+            randomX = rand() % 8;
+            randomY = rand() % 8;
+            n = head;
+            continue;
+        }
+        n = n->next;
+    }
+
+    fruit->x = randomX;
+    fruit->y = randomY;
 }
 
 void Snake::move(Direction dir) {
@@ -65,39 +84,23 @@ void Snake::move(Direction dir) {
 
     if (direction == r) {
         forward->x++;
-        head = forward;
-        
-        while (forward->next != tail) {
-            forward = forward->next;
-        }
-    }
-    else if (direction == d) {
+    }else if (direction == d) {
         forward->y++;
-        head = forward;
-        
-        while (forward->next != tail) {
-            forward = forward->next;
-        }
-    }
-    else if (direction == l) {
+    }else if (direction == l) {
         forward->x--;
-        head = forward;
-        
-        while (forward->next != tail) {
-            forward = forward->next;
-        }
-    }
-    else if (direction == u) {
+    }else if (direction == u) {
         forward->y--;
-        head = forward;
-        
-        while (forward->next != tail) {
-            forward = forward->next;
-        }
+    }
+    head = forward;
+    while (forward->next != tail) {
+        forward = forward->next;
     }
     // once forward->next = tail
-    delete tail;
-    tail = forward;
-    tail->next = nullptr;
-
+    if(fruit->x != head->x || fruit->y != head->y){ // check if snake is eating fruit
+        delete tail;
+        tail = forward;
+        tail->next = nullptr;
+    }else{
+        respawnFruit();
+    }
 }
