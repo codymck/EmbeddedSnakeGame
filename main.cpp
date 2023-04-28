@@ -10,6 +10,9 @@ Joystick j(A1, A0, D2);              // declare pins for joystick
 Game g; // declare game board
 Direction dir;
 
+int sleepTime = 200; // decrease this to speed it up
+
+
 int conversion(int array[],
                int len) { // convert array of binary numbers to a decimal number
   int output = 0;
@@ -60,7 +63,7 @@ void deathScreen() {
 void startAnimation() {
   for (int i = 1; i < 9; i++) {
     max7219.write_digit(1, i, 0b00000000);
-    thread_sleep_for(200);
+    thread_sleep_for(150);
   }
   g.resetBoard();
 }
@@ -96,7 +99,7 @@ int main() {
     while (g.gameOver == false) {
       // printf("direction = %i\n", d);
       int sleep = 0;
-      while (sleep < 300) {
+      while (sleep < sleepTime) {
         if (j.get_direction() != CENTRE) {
           dir = j.get_direction();
         }
@@ -104,7 +107,10 @@ int main() {
         sleep++;
       }
       g.update();
+
       g.s->move(dir);
+
+      printf("Score: %d\n", g.s->score);
 
       for (int i = 1; i < 9; i++) {
         unsigned char row = 0;
@@ -115,7 +121,6 @@ int main() {
         max7219.write_digit(1, i, argh);
       }
     }
-    printf("game ova\n");
     // random button pressed to "reset" it
     j.button_pressed();
     thread_sleep_for(500);

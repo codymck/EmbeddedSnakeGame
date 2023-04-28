@@ -27,11 +27,19 @@ Game::~Game() {
 void Game::update() {
     //resetBoard();
     Node *n = s->head;
+    Node *temp = s->head;
     Fruit *f = s->fruit;
 
     if(n->x < 0 || n->x > 7 || n->y < 0 || n->y > 7){
         gameOver = true;
         return;
+    }
+    while(temp->next != s->tail) {
+        temp = temp->next;
+        if(temp->x == s->head->x && temp->y == s->head->y){
+            gameOver = true;
+            return;
+        }
     }
     resetBoard();
     while (n != s->tail) {

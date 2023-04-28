@@ -6,9 +6,6 @@ Snake::Snake() {
     tail = new Node();
 
     fruit = new Fruit();
-    //fruit->x = 5;
-    //fruit->y = 5;
-
 
     direction = r;
 
@@ -25,25 +22,6 @@ Snake::Snake() {
 Snake::~Snake() {
 
 }
-
-// void Snake::grow() {
-//     Node *forward = new Node();
-//     forward->next = head;
-//     forward->x = head->x;
-//     forward->y = head->y;
-
-//     if (direction == r) {
-//         forward->x++;
-//     }else if (direction == d) {
-//         forward->y++;
-//     }else if (direction == l) {
-//         forward->x--;
-//     }else if (direction == u) {
-//         forward->y--;
-//     }
-
-//     head = forward;
-// }
 
 bool opposite(Direction d1, Direction d2){
     if((d1 == u && d2 == d) || (d1 == d && d2 == u)){
@@ -71,6 +49,7 @@ void Snake::respawnFruit(){
 
     fruit->x = randomX;
     fruit->y = randomY;
+    score++;
 }
 
 void Snake::move(Direction dir) {

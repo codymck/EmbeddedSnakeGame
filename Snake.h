@@ -17,6 +17,8 @@ public:
     Snake();
     ~Snake();
 
+    int score = -1; // set to -1 so the first fruit spawned sets it to 0
+
     Node *head;
     Node *tail;
     Fruit *fruit;
@@ -24,7 +26,6 @@ public:
     Direction direction; // char to represent direction 'u', 'd', 'l', 'r' { up, down, left, right }
 
     void respawnFruit();
-    void grow();
     void move(Direction d);
 
 };
