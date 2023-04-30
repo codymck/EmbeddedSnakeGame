@@ -6,12 +6,12 @@
 
 Max7219 max7219(D11, D12, D13, D10); // declare pins for 8x8 LED display
 Joystick j(A1, A0, D2);              // declare pins for joystick
+PwmOut spkr(D3);
 
 Game g; // declare game board
 Direction dir;
 
 int sleepTime = 200; // decrease this to speed it up
-
 
 int conversion(int array[],
                int len) { // convert array of binary numbers to a decimal number
@@ -36,6 +36,57 @@ void updateScreen() { //
       max7219.write_digit(1, i, argh);
     }
   }
+}
+
+void spiralScreen() {
+    int offset = 1;
+    int y = 4;
+    int x = 3;
+    g.board[y][x] = 1;
+    int direction = 0;
+    vector<int> dirs =  {0, 1, 2, 3}; // R U L D
+    bool flag = false;
+    while(x >= 0 && y >= 0){
+        for(int i = 0; i < offset; i++){
+            switch(dirs[direction]){
+                case 0: 
+                    x+= 1; // right
+                    g.board[y][x] = 1;
+                    thread_sleep_for(100);
+                    updateScreen();
+                    break;
+                case 1:
+                    y -= 1; // up
+                    g.board[y][x] = 1; 
+                    flag = true;
+                    thread_sleep_for(100);
+                    updateScreen();
+                    break;
+                case 2:
+                    x -= 1; // left
+                    g.board[y][x] = 1; 
+                    thread_sleep_for(100);
+                    updateScreen();
+                    break;
+                case 3: 
+                    y += 1; // down
+                    g.board[y][x] = 1; 
+                    flag = true;
+                    thread_sleep_for(100);
+                    updateScreen();
+                    break;
+            }
+        }
+        if(direction == 4){
+            direction = 0;
+        }else{
+            direction++;
+        }
+        if(flag){
+            offset++;
+            flag = false;
+        }
+    }
 }
 
 void deathScreen() {
@@ -79,8 +130,9 @@ int main() {
   max7219.init_device(cfg);
   max7219.enable_device(1);
   thread_sleep_for(1000);
-  max7219.display_all_on();
-
+  max7219.display_all_off();
+  g.resetBoard();
+  spiralScreen();
   // deathScreen();
   // thread_sleep_for(1000);
   // startAnimation();
@@ -90,10 +142,15 @@ int main() {
   while (1) {
     Game s;
     g = s;
+
     while (!j.button_pressed()){ };
     startAnimation();
     g.gameOver = false;
 
+    int score = 0;
+    printf("\e[1;1H\e[2J");
+    printf("### New Game ###\n");
+    printf("Score: 0\n");
     dir = r;
     //   max7219.display_all_off();
     while (g.gameOver == false) {
@@ -106,11 +163,19 @@ int main() {
         thread_sleep_for(1);
         sleep++;
       }
+      spkr = 0;
       g.update();
 
       g.s->move(dir);
+      
+      if(score != g.s->score){
+        score = g.s->score;
+        printf("\e[1;1H\e[2J");
+        printf("Score: %d\n", score);
 
-      printf("Score: %d\n", g.s->score);
+        spkr.period(0.001);
+        spkr = (0.035);
+      }
 
       for (int i = 1; i < 9; i++) {
         unsigned char row = 0;
@@ -124,6 +189,9 @@ int main() {
     // random button pressed to "reset" it
     j.button_pressed();
     thread_sleep_for(500);
+    printf("\e[1;1H\e[2J");
+    printf("Game Over\n");
+    printf("Final Score: %d\n", score);
     deathScreen();
   }
 }
