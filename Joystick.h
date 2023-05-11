@@ -63,6 +63,7 @@ public:
   Direction get_direction();   // N,NE,E,SE etc.
   Polar get_polar();           // mag and angle in struct form
   bool button_pressed(); // read button flag set in ISR when button pressed
+  bool paused;
 private:
   AnalogIn *vert;
   AnalogIn *horiz;

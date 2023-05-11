@@ -23,6 +23,7 @@ void Joystick::init() {
   // need to use a callback since mbed-os5 - basically tells it to look in this
   // class for the ISR
   _click_flag = 0;
+  paused = true;
 }
 
 Direction Joystick::get_direction() {
@@ -140,5 +141,6 @@ bool Joystick::button_pressed() {
 }
 
 void Joystick::click_isr() { 
-    _click_flag = 1; 
+    _click_flag = 1;
+    paused = !paused;
 }
